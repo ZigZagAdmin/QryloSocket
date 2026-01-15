@@ -4,7 +4,7 @@ using QryloSocketAPI.Database;
 
 namespace QryloSocketAPI.Repositories.Implementations;
 
-public class MessagesRepository(IDbContextFactory<QryloContext> contextFactory) : IMessagesRepository
+public class MessageRepository(IDbContextFactory<QryloContext> contextFactory) : IMessageRepository
 {
     public async Task Create(Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn,
         string text, bool isAction)

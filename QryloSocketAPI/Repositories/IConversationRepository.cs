@@ -4,7 +4,7 @@ using File = QryloSocketAPI.Models.File;
 
 namespace QryloSocketAPI.Repositories;
 
-public interface IConversationsRepository
+public interface IConversationRepository
 {
     Task<List<string>> GetConversations(Guid userId);
     

@@ -4,15 +4,14 @@ using QryloSocketAPI.Entities;
 
 namespace QryloSocketAPI.Database.EntityConfigurations;
 
-public class MessagesConfigurations: IEntityTypeConfiguration<Messages>
+public class MessageConfigurations: IEntityTypeConfiguration<Message>
 {
-    public void Configure(EntityTypeBuilder<Messages> builder)
+    public void Configure(EntityTypeBuilder<Message> builder)
     {
         builder.Property(e => e.UserId).HasDefaultValueSql("'00000000-0000-0000-0000-000000000000'::uuid");
         builder.Property(e => e.UserCreatedOn).HasDefaultValue(0);
         builder.Property(e => e.ConversationId).HasDefaultValueSql("'00000000-0000-0000-0000-000000000000'::uuid");
         builder.Property(e => e.ConversationCreatedOn).HasDefaultValue(0);
-        builder.Property(e => e.Text).HasDefaultValue("");
         builder.Property(e => e.UpdatedOn).HasDefaultValue(0);
         builder.Property(e => e.CreatedOn).HasDefaultValue(0);
         builder.Property(e => e.IsDelivered).HasDefaultValue(0);

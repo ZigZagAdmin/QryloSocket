@@ -4,9 +4,9 @@ using QryloSocketAPI.Entities;
 
 namespace QryloSocketAPI.Database.EntityConfigurations;
 
-public class ConversationMembersConfiguration: IEntityTypeConfiguration<ConversationMembers>
+public class ConversationMemberConfiguration: IEntityTypeConfiguration<ConversationMember>
 {
-    public void Configure(EntityTypeBuilder<ConversationMembers> builder)
+    public void Configure(EntityTypeBuilder<ConversationMember> builder)
     {
         builder.Property(e => e.ConversationId).HasDefaultValueSql("'00000000-0000-0000-0000-000000000000'::uuid");
         builder.Property(e => e.ConversationCreatedOn).HasDefaultValue(0);

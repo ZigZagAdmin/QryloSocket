@@ -4,9 +4,9 @@ using QryloSocketAPI.Entities;
 
 namespace QryloSocketAPI.Database.EntityConfigurations;
 
-public class ConversationsConfiguration: IEntityTypeConfiguration<Conversations>
+public class ConversationConfiguration: IEntityTypeConfiguration<Conversation>
 {
-    public void Configure(EntityTypeBuilder<Conversations> builder)
+    public void Configure(EntityTypeBuilder<Conversation> builder)
     {
         builder.Property(e => e.Name).HasDefaultValue("");
         builder.Property(e => e.Avatar).HasDefaultValue("");

@@ -1,6 +1,6 @@
 namespace QryloSocketAPI.Repositories;
 
-public interface IMessagesRepository
+public interface IMessageRepository
 {
     Task Create(Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn, string text, bool isAction);
 

@@ -10,7 +10,7 @@ using File = QryloSocketAPI.Models.File;
 
 namespace QryloSocketAPI.Repositories.Implementations;
 
-public class ConversationsRepository(IDbContextFactory<QryloContext> contextFactory, ICachingService<List<string>> cachingListService, ICachingService<Conversation> cachingService) : IConversationsRepository
+public class ConversationRepository(IDbContextFactory<QryloContext> contextFactory, ICachingService<List<string>> cachingListService, ICachingService<Conversation> cachingService) : IConversationRepository
 {
     public async Task<List<string>> GetConversations(Guid userId)
     {

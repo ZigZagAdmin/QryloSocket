@@ -1,9 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace QryloSocketAPI.Entities;
 
-[PrimaryKey("MessageId", "CreatedOn")]
-public record Messages
+[Table("Messages"), PrimaryKey("MessageId", "CreatedOn")]
+public record Message
 {
     public Guid MessageId { get; init; }
     
@@ -14,8 +15,6 @@ public record Messages
     public Guid ConversationId { get; init; }
     
     public long ConversationCreatedOn { get; init; }
-    
-    public string Text { get; set; } = string.Empty;
     
     public long UpdatedOn { get; set; }
     

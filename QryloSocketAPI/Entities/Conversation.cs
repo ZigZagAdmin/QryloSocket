@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QryloSocketAPI.Entities;
 
-[PrimaryKey("ConversationId", "CreatedOn")]
-public record Conversations
+[Table("Conversations"), PrimaryKey("ConversationId", "CreatedOn")]
+public record Conversation
 {
     public Guid ConversationId { get; init; }
 

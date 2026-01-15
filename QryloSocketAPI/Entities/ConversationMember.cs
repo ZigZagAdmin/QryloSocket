@@ -1,9 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace QryloSocketAPI.Entities;
 
-[PrimaryKey("ConversationMemberId", "CreatedOn")]
-public record ConversationMembers
+[Table("ConversationMembers"), PrimaryKey("ConversationMemberId", "CreatedOn")]
+public record ConversationMember
 {
     public Guid ConversationMemberId { get; init; }
     
