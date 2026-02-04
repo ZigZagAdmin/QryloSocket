@@ -1,22 +1,18 @@
+using QryloSocketAPI.Models;
+
 namespace QryloSocketAPI.Services;
 
 public interface IMessagesService
 {
-    Task SendMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, string message, bool isAction);
+    Task SendMessage(Guid requesterId, Guid conversationId, List<MessagePart> parts, bool isAction);
 
-    Task DeleteMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn);
+    Task DeleteMessage(Guid requesterId, Guid conversationId, Guid messageId);
 
-    Task UpdateMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn, string message);
+    Task UpdateMessage(Guid requesterId, Guid conversationId, Guid messageId, List<MessagePart> parts);
 
-    Task ReadMessage(Guid memberMessageId, long messageCreatedOn, Guid memberId, long memberCreatedOn);
+    Task ReadMessage(Guid memberMessageId, Guid memberId);
 
-    Task ReportMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn, string comment);
+    Task ReportMessage(Guid requesterId, Guid conversationId, Guid messageId, string comment);
 
-    Task PinMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn);
-    
-    Task MarkAsDelivered(Guid memberMessageId, long messageCreatedOn, Guid memberId, long memberCreatedOn);
+    Task PinMessage(Guid requesterId, Guid conversationId, Guid messageId);
 }

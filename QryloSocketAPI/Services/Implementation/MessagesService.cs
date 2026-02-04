@@ -1,47 +1,51 @@
+using QryloSocketAPI.Models;
 using QryloSocketAPI.Repositories;
+using QryloSocketAPI.Utilities;
+using QryloSocketAPI.Utilities.Enums;
 
 namespace QryloSocketAPI.Services.Implementation;
 
-public class MessagesService(IMessageRepository messageRepository) : IMessagesService
+public class MessagesService(IMessageRepository messageRepository, IConversationMemberRepository conversationMemberRepository) : IMessagesService
 {
-    public async Task SendMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, string message, bool isAction)
+    public async Task SendMessage(Guid requesterId, Guid conversationId, List<MessagePart> parts, bool isAction)
     {
-        await messageRepository.Create(userId, userCreatedOn, conversationId, conversationCreatedOn, message, isAction);
+        if (!await conversationMemberRepository.HasPermission(conversationId, requesterId,ConversationPermissions.Member))
+        {
+            throw new GlobalException("Access denied");
+        }
+        await messageRepository.Create(requesterId, conversationId, parts, isAction);
     }
 
-    public async Task DeleteMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn)
+    public async Task DeleteMessage(Guid requesterId, Guid conversationId, Guid messageId)
     {
-        await messageRepository.Delete(messageId, messageCreatedOn, conversationId,conversationCreatedOn, userId, userCreatedOn);
+        var isAdmin = await conversationMemberRepository.HasPermission(conversationId, requesterId,
+            ConversationPermissions.Admin, ConversationPermissions.SuperAdmin);
+     
+        await messageRepository.Delete(messageId, conversationId, requesterId, isAdmin);
     }
 
-    public async Task UpdateMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn, string message)
+    public async Task UpdateMessage(Guid requesterId, Guid conversationId, Guid messageId, List<MessagePart> parts)
     {
-        await messageRepository.Update(messageId, messageCreatedOn, conversationId, conversationCreatedOn, userId, userCreatedOn, message);
+        await messageRepository.Update(messageId, conversationId, requesterId, parts);
     }
 
-    public async Task ReadMessage(Guid memberMessageId, long messageCreatedOn, Guid memberId, long memberCreatedOn)
+    public async Task ReadMessage(Guid memberMessageId, Guid memberId)
     {
-        await messageRepository.Read(memberMessageId, messageCreatedOn, memberId, memberCreatedOn);
+        await messageRepository.Read(memberMessageId, memberId);
     }
 
-    public async Task ReportMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn, string comment)
+    public async Task ReportMessage(Guid userId, Guid conversationId, Guid messageId, string comment)
     {
-        await messageRepository.Report(messageId, messageCreatedOn, conversationId, conversationCreatedOn, userId,
-            userCreatedOn);
+        await messageRepository.Report(messageId, conversationId, userId);
     }
 
-    public async Task PinMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId,
-        long messageCreatedOn)
+    public async Task PinMessage(Guid requesterId, Guid conversationId, Guid messageId)
     {
-        await messageRepository.Pin(messageId, messageCreatedOn, conversationId, conversationCreatedOn, userId,
-            userCreatedOn);
-    }
-
-    public async Task MarkAsDelivered(Guid memberMessageId, long messageCreatedOn, Guid memberId, long memberCreatedOn)
-    {
-        await messageRepository.MarkAsDelivered(memberMessageId, messageCreatedOn, memberId, memberCreatedOn);
+        if (!await conversationMemberRepository.HasPermission(conversationId, requesterId,
+                ConversationPermissions.Admin, ConversationPermissions.SuperAdmin))
+        {
+            throw new GlobalException("Access denied");
+        }
+        await messageRepository.Pin(messageId, conversationId, requesterId);
     }
 }

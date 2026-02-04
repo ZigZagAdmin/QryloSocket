@@ -4,9 +4,13 @@ namespace QryloSocketAPI.Models;
 
 public record Member
 (
-    Guid memberId, 
+    Guid ConversationMemberId, 
     
-    string name, 
+    Guid MemberId, 
     
-    ConversationPermissions permission
+    string Name, 
+    
+    ConversationPermissions[] Permission,
+    
+    bool IsBlocked
 );

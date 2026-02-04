@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QryloSocketAPI.Entities;
+using QryloSocketAPI.Records;
 
 namespace QryloSocketAPI.Database;
 
@@ -17,5 +18,7 @@ public class QryloContext : DbContext
     {
         modelBuilder.HasDefaultSchema("public");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(QryloContext).Assembly);
+        
+        modelBuilder.Entity<MembersRecord>().HasNoKey().ToView(null);
     }
 }

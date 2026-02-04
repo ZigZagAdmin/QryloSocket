@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using QryloSocketAPI.Utilities.Enums;
 
 namespace QryloSocketAPI.Entities;
 
@@ -16,7 +17,7 @@ public record ConversationMember
     
     public long UserCreatedOn { get; init; }
     
-    public int Permission { get; set; }
+    public ConversationPermissions Permission { get; set; }
     
     public short IsBlocked { get; set; }
     

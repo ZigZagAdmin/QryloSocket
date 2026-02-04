@@ -1,19 +1,18 @@
+using QryloSocketAPI.Models;
+
 namespace QryloSocketAPI.Repositories;
 
 public interface IMessageRepository
 {
-    Task Create(Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn, string text, bool isAction);
+    Task Create(Guid conversationId, Guid userId, List<MessagePart> parts, bool isAction);
 
-    Task Update(Guid messageId, long messageCreatedOn, Guid conversationId, long conversationCreatedOn, Guid userId,
-        long userCreatedOn, string text);
+    Task Update(Guid messageId, Guid conversationId, Guid requesterId, List<MessagePart> parts);
     
-    Task Delete(Guid messageId, long messageCreatedOn, Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn);
+    Task Delete(Guid messageId, Guid conversationId, Guid requesterId, bool isAdmin);
     
-    Task Read(Guid memberMessageId, long messageCreatedOn, Guid memberId, long memberCreatedOn);
+    Task Read(Guid memberMessageId, Guid memberId);
 
-    Task MarkAsDelivered(Guid memberMessageId, long messageCreatedOn, Guid memberId, long memberCreatedOn);
+    Task Pin(Guid messageId, Guid conversationId, Guid requesterId);
     
-    Task Pin(Guid messageId, long messageCreatedOn, Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn);
-    
-    Task Report(Guid messageId, long messageCreatedOn, Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn);
+    Task Report(Guid messageId, Guid conversationId, Guid requesterId);
 }

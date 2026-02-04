@@ -2,11 +2,11 @@ namespace QryloSocketAPI.Models;
 
 public record Conversation
 (
-    Guid conversationId,
+    Guid ConversationId,
     
-    string name,
+    string Name,
     
-    long createdOn,
+    long CreatedOn,
     
-    bool isPrivate
+    bool IsPrivate
 );

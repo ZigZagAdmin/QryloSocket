@@ -7,12 +7,12 @@ namespace QryloSocketAPI.Hubs;
 
 public partial class SocketHub
 {
-    public async Task SendMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, string message, bool isAction)
+    public async Task SendMessage(Guid userId, Guid conversationId, List<MessagePart> parts, bool isAction)
     {
         try
         {
-            await messagesService.SendMessage(userId, userCreatedOn, conversationId, conversationCreatedOn, message, isAction);
-            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_RECEIVED, new { userId, userCreatedOn, conversationId, conversationCreatedOn, message, isAction });
+            await messagesService.SendMessage(userId, conversationId, parts, isAction);
+            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_RECEIVED, new { userId, conversationId, parts, isAction });
         }
         catch (Exception e)
         {
@@ -20,12 +20,12 @@ public partial class SocketHub
         }
     }
     
-    public async Task DeleteMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId, long messageCreatedOn)
+    public async Task DeleteMessage(Guid userId, Guid conversationId, Guid messageId)
     {
         try
         {
-            await messagesService.DeleteMessage(userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn);
-            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_DELETED, new { userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn });
+            await messagesService.DeleteMessage(userId, conversationId, messageId);
+            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_DELETED, new { userId, conversationId, messageId });
         }
         catch (Exception e)
         {
@@ -33,12 +33,12 @@ public partial class SocketHub
         }
     }
     
-    public async Task UpdateMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId, long messageCreatedOn, string message)
+    public async Task UpdateMessage(Guid userId, Guid conversationId, Guid messageId, List<MessagePart> parts)
     {
         try
         {
-            await messagesService.UpdateMessage(userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn, message);
-            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_UPDATED, new { userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn, message });
+            await messagesService.UpdateMessage(userId, conversationId, messageId, parts);
+            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_UPDATED, new { userId, conversationId, messageId, parts });
         }
         catch (Exception e)
         {
@@ -46,12 +46,12 @@ public partial class SocketHub
         }
     }
     
-    public async Task ReadMessage(Guid userId, long userCreatedOn, Guid messageId, long messageCreatedOn, Guid conversationId, long conversationCreatedOn)
+    public async Task ReadMessage(Guid userId, Guid messageId, Guid conversationId)
     {
         try  
         {
-            await messagesService.ReadMessage(messageId, messageCreatedOn, userId, userCreatedOn);
-            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_READ, new { userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn });
+            await messagesService.ReadMessage(messageId, userId);
+            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_READ, new { userId, conversationId, messageId });
         }
         catch (Exception e)
         {
@@ -59,11 +59,11 @@ public partial class SocketHub
         }
     }
     
-    public async Task ReportMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId, long messageCreatedOn, string comment)
+    public async Task ReportMessage(Guid userId, Guid conversationId, Guid messageId, string comment)
     {
         try
         {
-            await messagesService.ReportMessage(userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn, comment);
+            await messagesService.ReportMessage(userId, conversationId, messageId, comment);
         }
         catch (Exception e)
         {
@@ -71,12 +71,12 @@ public partial class SocketHub
         }
     }
     
-    public async Task PinMessage(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid messageId, long messageCreatedOn)
+    public async Task PinMessage(Guid userId, Guid conversationId, Guid messageId)
     {
         try
         {
-            await messagesService.PinMessage(userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn);
-            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_PINNED, new { userId, userCreatedOn, conversationId, conversationCreatedOn, messageId, messageCreatedOn });
+            await messagesService.PinMessage(userId, conversationId, messageId);
+            await Clients.Group(ConversationConnection(conversationId.ToString())).SendAsync(Topics.MESSAGE_PINNED, new { userId, conversationId, messageId });
         }
         catch (Exception e)
         {

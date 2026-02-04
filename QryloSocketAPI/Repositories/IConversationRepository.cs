@@ -8,20 +8,12 @@ public interface IConversationRepository
 {
     Task<List<string>> GetConversations(Guid userId);
     
-    Task<Conversation> GetConversation(Guid conversationId, long createdOn);
+    Task<Conversation> GetConversation(Guid conversationId);
     
-    Task<Guid> Create(Guid userId, long userCreatedOn, string name, Dictionary<Guid, ConversationPermissions> users,
+    Task<Guid> Create(Guid userId, string name, Dictionary<Guid, ConversationPermissions> users,
         bool isPrivate, File? avatar = null);
 
-    Task Update(Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn, string name);
+    Task Update(Guid conversationId, string name, string avatar);
 
-    Task Delete(Guid conversationId, long conversationCreatedOn, Guid userId, long userCreatedOn);
-    
-    Task BlockMember(Guid memberId, long createdOn, Guid requesterId, long requesterCreatedOn);
-
-    Task AddMember(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid memberId,
-        long memberCreatedOn, ConversationPermissions permission);
-
-    Task RemoveMember(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid memberId,
-        long memberCreatedOn);
+    Task Delete(Guid conversationId);
 }

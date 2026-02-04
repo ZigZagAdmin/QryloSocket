@@ -10,6 +10,7 @@ public record Topics
     public const string MEMBER_INVITED = "MemberInvited";
     public const string MEMBER_REMOVED = "MemberRemoved";
     public const string MEMBER_BLOCKED = "MemberBlocked";
+    public const string MEMBER_UPDATED = "MemberUpdated";
 
     // Messages
     public const string MESSAGE_RECEIVED = "MessageReceived";

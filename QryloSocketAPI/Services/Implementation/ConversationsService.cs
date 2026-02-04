@@ -1,53 +1,48 @@
 using QryloSocketAPI.Models;
 using QryloSocketAPI.Repositories;
+using QryloSocketAPI.Utilities;
 using QryloSocketAPI.Utilities.Enums;
 
 namespace QryloSocketAPI.Services.Implementation;
 
-public class ConversationsService(IConversationRepository conversationRepository) : IConversationsService
+public class ConversationsService(IConversationRepository conversationRepository, IConversationMemberRepository conversationMemberRepository) : IConversationsService
 {
     public async Task<List<string>> GetConversations(Guid userId)
     {
         return await conversationRepository.GetConversations(userId);
     }
 
-    public async Task<Conversation> GetConversation(Guid conversationId, long createdOn)
+    public async Task<Conversation> GetConversation(Guid requesterId, Guid conversationId)
     {
-        return await conversationRepository.GetConversation(conversationId, createdOn);
+        if (!await conversationMemberRepository.HasPermission(conversationId, requesterId,
+                ConversationPermissions.Member))
+        {
+            throw new GlobalException("Access denied");
+        }
+        return await conversationRepository.GetConversation(conversationId);
     }
 
-    public async Task<Guid> CreateConversation(Guid userId, long userCreatedOn, string conversationName, Dictionary<Guid, ConversationPermissions> members, bool isPrivate)
+    public async Task<Guid> CreateConversation(Guid requesterId, string conversationName, Dictionary<Guid, ConversationPermissions> members, bool isPrivate)
     {
-        return await conversationRepository.Create(userId, userCreatedOn, conversationName, members, isPrivate);
+        return await conversationRepository.Create(requesterId, conversationName, members, isPrivate);
     }
 
-    public async Task DeleteConversation(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn)
+    public async Task DeleteConversation(Guid requesterId, Guid conversationId)
     {
-        await conversationRepository.Delete(conversationId, conversationCreatedOn, userId, userCreatedOn);
+        if (!await conversationMemberRepository.HasPermission(conversationId, requesterId,ConversationPermissions.SuperAdmin))
+        {
+            throw new GlobalException("Access denied");
+        }
+        await conversationRepository.Delete(conversationId);
     }
 
-    public async Task UpdateConversation(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn,
-        string conversationName)
+    public async Task UpdateConversation(Guid requesterId, Guid conversationId, string conversationName)
     {
-        await conversationRepository.Update(conversationId, conversationCreatedOn, userId, userCreatedOn,
-            conversationName);
-    }
-
-    public async Task AddMember(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid memberId,
-        long memberCreatedOn, ConversationPermissions permission)
-    {
-        await conversationRepository.AddMember(userId, userCreatedOn, conversationId, conversationCreatedOn, memberId,
-            memberCreatedOn, permission);
-    }
-
-    public async Task RemoveMember(Guid userId, long userCreatedOn, Guid conversationId, long conversationCreatedOn, Guid memberId,
-        long memberCreatedOn)
-    {
-        await conversationRepository.RemoveMember(userId, userCreatedOn, conversationId, conversationCreatedOn, memberId, memberCreatedOn);
-    }
-
-    public async Task BlockMember(Guid memberId, long createdOn, Guid requesterId, long requesterCreatedOn)
-    {
-        await conversationRepository.BlockMember(memberId, createdOn, requesterId, requesterCreatedOn);
+        if (!await conversationMemberRepository.HasPermission(conversationId, requesterId,
+                ConversationPermissions.Admin, ConversationPermissions.SuperAdmin))
+        {
+            throw new GlobalException("Access denied");
+        }
+        await conversationRepository.Update(conversationId, conversationName, string.Empty);
     }
 }
